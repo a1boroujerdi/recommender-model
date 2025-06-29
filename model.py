@@ -80,6 +80,9 @@ def recommend():
         'matched_product': matched_product,
         'recommendations': top_recommendations
     })
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({"status": "healthy"}), 200
 
 @app.route('/add_order', methods=['POST'])
 def add_order():

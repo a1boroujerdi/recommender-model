@@ -2,18 +2,21 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install curl
-RUN apt-get update && apt-get install -y curl && apt-get clean
+# ---- system deps (curl for health-check) ----
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends curl ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
 
+# ---- python deps ----
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# ---- app files ----
 COPY . .
 
-RUN pip install --no-cache-dir flask pandas mlxtend scipy
+# ---- health-check (wait 60 s before first probe) ----
+HEALTHCHECK --interval=20s --timeout=3s --start-period=60s --retries=3 \
+  CMD curl -fsS http://localhost/health || exit 1
 
 EXPOSE 80
-
-ENV FLASK_RUN_HOST=0.0.0.0
-ENV FLASK_RUN_PORT=80
-
 CMD ["python3", "model.py"]
-
-

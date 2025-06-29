@@ -1,0 +1,4 @@
+flask
+pandas
+mlxtend
+scipy          # mlxtend runtime dep

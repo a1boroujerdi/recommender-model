@@ -3,6 +3,9 @@ from flask import Flask, request, jsonify
 import difflib
 
 from mlxtend.frequent_patterns import apriori, association_rules
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 app = Flask(__name__)
 
